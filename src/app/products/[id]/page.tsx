@@ -19,17 +19,18 @@ const getProduct = cache(async (id: string) => {
   return product;
 });
 
-export async function generateMetadata(
-    {params: { id }} : ProductPageProps
-): Promise<Metadata> {
+export async function generateMetadata({
+  params: { id },
+}: ProductPageProps): Promise<Metadata> {
   const product = await getProduct(id);
+
   return {
     title: product.name + " - PMK Panda",
     description: product.description,
-    openGraph:{
-        images: [{ url: product.imageUrl }],
-    }
-  }
+    openGraph: {
+      images: [{ url: product.imageUrl }],
+    },
+  };
 }
 
 export default async function ProductPage({
@@ -38,7 +39,7 @@ export default async function ProductPage({
   const product = await getProduct(id);
 
   return (
-    <div className="flex flex-col lg:flex-row gap-4 lg:items-center">
+    <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
       <Image
         src={product.imageUrl}
         alt={product.name}
@@ -52,7 +53,10 @@ export default async function ProductPage({
         <h1 className="text-5xl font-semibold py-4">{product.name}</h1>
         <PriceTag price={product.price} className="mt-4" />
         <p className="py-6">{product.description}</p>
-        <AddToCartButton productId={product.id} incrementProductQuantity={incrementProductQuantity}/>
+        <AddToCartButton
+          productId={product.id}
+          incrementProductQuantity={incrementProductQuantity}
+        />
       </div>
     </div>
   );

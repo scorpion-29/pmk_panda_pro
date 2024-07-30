@@ -26,12 +26,13 @@ export default async function SearchPage({
     },
     orderBy: { id: "desc" },
   });
+
   if (products.length === 0) {
-    return <div className="text-center">No prodcts found</div>;
+    return <div className="text-center">No products found</div>;
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
       {products.map((product) => (
         <ProductCard product={product} key={product.id} />
       ))}

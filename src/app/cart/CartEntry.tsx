@@ -35,7 +35,6 @@ export default function CartEntry({
           width={200}
           height={200}
           className="rounded-lg max-w-[150px] h-[150px]"
-          priority
         />
         <div>
           <Link href={"/products/" + product.id} className="font-bold">
@@ -45,23 +44,25 @@ export default function CartEntry({
           <div className="my-1 flex items-center gap-2">
             Quantity:
             <select
-              className="select select-bordered w-full max-w-[80px]"
+              className="select-bordered select w-full max-w-[80px]"
               defaultValue={quantity}
               onChange={(e) => {
                 const newQuantity = parseInt(e.currentTarget.value);
                 startTransition(async () => {
-                    await setProductQuantity(product.id, newQuantity)
-                })
+                  await setProductQuantity(product.id, newQuantity);
+                });
               }}
             >
-                <option value={0}>0 (Remove)</option>
+              <option value={0}>0 (Remove)</option>
               {quantityOptions}
             </select>
           </div>
           <div className="flex items-center gap-3">
             Total: {formatPrice(product.price * quantity)}
-            {isPending && <span className="loading loading-spinner loading-sm" />}
-            </div>
+            {isPending && (
+              <span className="loading loading-spinner loading-sm" />
+            )}
+          </div>
         </div>
       </div>
       <div className="divider" />

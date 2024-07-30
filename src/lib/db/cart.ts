@@ -1,8 +1,8 @@
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { Cart, CartItem, Prisma } from "@prisma/client";
+import { getServerSession } from "next-auth";
 import { cookies } from "next/dist/client/components/headers";
 import { prisma } from "./prisma";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export type CartWithProducts = Prisma.CartGetPayload<{
   include: { items: { include: { product: true } } };
@@ -76,6 +76,7 @@ export async function createCart(): Promise<ShoppingCart> {
     subtotal: 0,
   };
 }
+
 export async function mergeAnonymousCartIntoUserCart(userId: string) {
   const localCartId = cookies().get("localCartId")?.value;
 
@@ -106,7 +107,7 @@ export async function mergeAnonymousCartIntoUserCart(userId: string) {
         data: {
           items: {
             createMany: {
-              data: localCart.items.map((item) => ({
+              data: mergedCartItems.map((item) => ({
                 productId: item.productId,
                 quantity: item.quantity,
               })),
@@ -133,6 +134,7 @@ export async function mergeAnonymousCartIntoUserCart(userId: string) {
     await tx.cart.delete({
       where: { id: localCart.id },
     });
+    // throw Error("Transaction failed");
     cookies().set("localCartId", "");
   });
 }

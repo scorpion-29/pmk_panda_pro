@@ -1,7 +1,7 @@
 import { getCart } from "@/lib/db/cart";
+import { formatPrice } from "@/lib/format";
 import CartEntry from "./CartEntry";
 import { setProductQuantity } from "./actions";
-import { formatPrice } from "@/lib/format";
 
 export const metadata = {
   title: "Your Cart - PMK Panda",
@@ -25,9 +25,7 @@ export default async function CartPage() {
         <p className="mb-3 font-bold">
           Total: {formatPrice(cart?.subtotal || 0)}
         </p>
-        <button className="btn btn-primary rounded-lg sm:w-[200px]">
-          Checkout
-        </button>
+        <button className="btn-primary btn sm:w-[200px]">Checkout</button>
       </div>
     </div>
   );
