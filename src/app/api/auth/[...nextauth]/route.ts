@@ -1,24 +1,25 @@
-import { mergeAnonymousCartIntoUserCart } from "@/lib/db/cart";
-import { prisma } from "@/lib/db/prisma";
-import { env } from "@/lib/env";
+import NextAuth from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { PrismaClient } from "@prisma/client";
-import { NextAuthOptions } from "next-auth";
-import { Adapter } from "next-auth/adapters";
-import NextAuth from "next-auth/next";
+import { prisma } from "@/lib/db/prisma";
 import GoogleProvider from "next-auth/providers/google";
+import nextAuth, { NextAuthOptions } from "next-auth";
+import { mergeAnonymousCartIntoUserCart } from "@/lib/db/cart";
+import { PrismaClient } from "@prisma/client";
+import { Adapter } from "next-auth/adapters";
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma as PrismaClient) as Adapter,
+  adapter:  PrismaAdapter(prisma as PrismaClient) as Adapter,
   providers: [
     GoogleProvider({
-      clientId: env.GOOGLE_CLIENT_ID,
-      clientSecret: env.GOOGLE_CLIENT_SECRET,
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
   callbacks: {
-    session({ session, user }) {
-      session.user.id = user.id;
+    async session({ session, user }) {
+      if (session.user) {
+        session.user.id = user.id;
+      }
       return session;
     },
   },
